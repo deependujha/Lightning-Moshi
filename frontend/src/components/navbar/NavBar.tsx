@@ -31,7 +31,6 @@ type MenuItem = {
 const NavBarComponent = () => {
   const router = useRouter();
   const curr_url = usePathname();
-  console.log("curr_url: ", curr_url);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [loginStatus, setLoginStatus] = React.useState(false);
@@ -54,13 +53,13 @@ const NavBarComponent = () => {
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
     >
-      <NavbarContent className="sm:hidden" justify="start">
+      <NavbarContent className="md:hidden" justify="start">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         />
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden pr-3 font-semibold" justify="center">
+      <NavbarContent className="md:hidden pr-3 font-semibold" justify="center">
         <NavbarBrand
           className="hover:cursor-pointer"
           onClick={() => router.push("/")}
@@ -69,7 +68,7 @@ const NavBarComponent = () => {
           <p className="font-bold text-inherit">DEEP</p>
         </NavbarBrand>
       </NavbarContent>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden md:flex gap-4" justify="center">
         <NavbarBrand
           className="hover:cursor-pointer"
           onClick={() => router.push("/")}
