@@ -79,7 +79,7 @@ const NavBarComponent = () => {
         <NavbarItem>
           <Link
             color={curr_url === "/" ? "primary" : "foreground"}
-            // href="/"
+            href="/"
             size="lg"
           >
             Home
