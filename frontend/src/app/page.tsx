@@ -1,3 +1,4 @@
+import FooterComponent from "@/components/FooterComponent";
 import React from "react";
 // import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 
@@ -204,6 +205,7 @@ const Page = () => {
 					</div>
 				</h2>
 			</BackgroundBeamsWithCollision> */}
+      <FooterComponent />
     </>
   );
 };
