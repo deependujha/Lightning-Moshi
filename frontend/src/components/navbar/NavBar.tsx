@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Navbar,
   NavbarBrand,
@@ -30,6 +30,8 @@ type MenuItem = {
 
 const NavBarComponent = () => {
   const router = useRouter();
+  const curr_url = usePathname();
+  console.log("curr_url: ", curr_url);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [loginStatus, setLoginStatus] = React.useState(false);
@@ -58,7 +60,7 @@ const NavBarComponent = () => {
         />
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden pr-3" justify="center">
+      <NavbarContent className="sm:hidden pr-3 font-semibold" justify="center">
         <NavbarBrand
           className="hover:cursor-pointer"
           onClick={() => router.push("/")}
@@ -76,27 +78,47 @@ const NavBarComponent = () => {
           <p className="font-bold text-inherit">DEEP</p>
         </NavbarBrand>
         <NavbarItem>
-          <Link color="foreground" href="/">
+          <Link
+            color={curr_url === "/" ? "primary" : "foreground"}
+            href="/"
+            size="lg"
+          >
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="/app" aria-current="page">
+        <NavbarItem>
+          <Link
+            color={curr_url === "/app" ? "primary" : "foreground"}
+            href="/app"
+            size="lg"
+          >
             App
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/performance">
+          <Link
+            color={curr_url === "/performance" ? "primary" : "foreground"}
+            href="/performance"
+            size="lg"
+          >
             Performance
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/architecture">
+          <Link
+            color={curr_url === "/architecture" ? "primary" : "foreground"}
+            href="/architecture"
+            size="lg"
+          >
             Architecture
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/send-me-a-msg">
+          <Link
+            color={curr_url === "/send-me-a-msg" ? "primary" : "foreground"}
+            href="/send-me-a-msg"
+            size="lg"
+          >
             Send me a msg
           </Link>
         </NavbarItem>
