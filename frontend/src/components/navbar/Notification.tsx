@@ -5,6 +5,7 @@ import Image from "next/image";
 const Notification = () => {
   const [notificationVisible, setNotificationVisible] = useState(true);
   const handleNotificationClose = () => {
+    console.log(`notification closed`);
     setNotificationVisible(false);
   };
   if (!notificationVisible) {
@@ -16,17 +17,15 @@ const Notification = () => {
         <span className="font-bold">New! LitServe with gRPC </span>
         <span>support is now available.</span>
       </div>
-      <div
-        className="cursor-pointer ml-7 my-1"
-        onClick={handleNotificationClose}
-      >
+      <button className="ml-7 my-1 z-40" onClick={handleNotificationClose}>
         <Image
-          src="/images/cross-button.png"
-          width={20}
-          height={20}
+          src="/images/close-notification.png"
+          width={15}
+          height={15}
           alt="cross-button"
+          className="cursor-pointer"
         />
-      </div>
+      </button>
     </div>
   );
 };
