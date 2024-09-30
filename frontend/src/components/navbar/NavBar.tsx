@@ -1,11 +1,17 @@
 "use client";
 import React from "react";
 import { Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link } from "@nextui-org/react";
-import Image from "next/image";
-import {AcmeLogo} from "./AcmeLogo"
+import { AcmeLogo } from "./AcmeLogo"
+import LoginComponent from "@/components/navbar/LoginComponent";
+import LogoutComponent from '@/components/navbar/LogoutComponent';
 
 const NavBarComponent = () => {
-	const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+	const [ isMenuOpen, setIsMenuOpen ] = React.useState( false );
+	const [ loginStatus, setLoginStatus ] = React.useState( false );
+
+	const changeLoginStatus = ( status: boolean ) => {
+		setLoginStatus( status );
+	}
 
 	const menuItems = [
 		"Home",
@@ -22,12 +28,12 @@ const NavBarComponent = () => {
 
 	return (
 		<Navbar
-			isBordered={true}
-			isMenuOpen={isMenuOpen}
-			onMenuOpenChange={setIsMenuOpen}
+			isBordered={ true }
+			isMenuOpen={ isMenuOpen }
+			onMenuOpenChange={ setIsMenuOpen }
 		>
 			<NavbarContent className="sm:hidden" justify="start">
-				<NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
+				<NavbarMenuToggle aria-label={ isMenuOpen ? "Close menu" : "Open menu" } />
 			</NavbarContent>
 
 			<NavbarContent className="sm:hidden pr-3" justify="center">
@@ -44,37 +50,35 @@ const NavBarComponent = () => {
 				</NavbarBrand>
 				<NavbarItem>
 					<Link color="foreground" href="#">
-            Features
+						Features
 					</Link>
 				</NavbarItem>
 				<NavbarItem isActive>
 					<Link href="#" aria-current="page">
-            Customers
+						Customers
 					</Link>
 				</NavbarItem>
 				<NavbarItem>
 					<Link color="foreground" href="#">
-            Integrations
+						Integrations
 					</Link>
 				</NavbarItem>
 			</NavbarContent>
 
 			<NavbarContent justify="end">
 				<NavbarItem>
-					<button>
-						<div className="flex">
-						<Image src="/images/google.png" width={20} height={20} alt="google"/>
-						<div>
-							Sign In
-						</div>
-						</div>
-					</button>
+					{ !loginStatus ?
+						<LoginComponent changeLoginStatus={ changeLoginStatus } />
+						:
+
+						<LogoutComponent changeLoginStatus={ changeLoginStatus } />
+					}
 				</NavbarItem>
 			</NavbarContent>
 
 			<NavbarMenu>
-				{menuItems.map((item, index) => (
-					<NavbarMenuItem key={`${item}-${index}`}>
+				{ menuItems.map( ( item, index ) => (
+					<NavbarMenuItem key={ `${item}-${index}` }>
 						<Link
 							className="w-full"
 							color={
@@ -83,13 +87,16 @@ const NavBarComponent = () => {
 							href="#"
 							size="lg"
 						>
-							{item}
+							{ item }
 						</Link>
 					</NavbarMenuItem>
-				))}
+				) ) }
 			</NavbarMenu>
 		</Navbar>
 	);
 }
 
 export default NavBarComponent;
+
+
+
