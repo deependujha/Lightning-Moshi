@@ -28,4 +28,9 @@ const testimonials = [
     name: "Sebastian Raschka",
     title: " Staff Research Engineer, Lightning AI",
   },
+  {
+    quote: "Oh man, you rock! I love the commitment !",
+    name: "Thomas Chaton",
+    title: " Staff Research Engineer, Lightning AI",
+  },
 ];
