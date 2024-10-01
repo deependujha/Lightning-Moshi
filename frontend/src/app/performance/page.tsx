@@ -18,7 +18,7 @@ const PerformancePage = () => {
         <div className="bg-white">
           <SimplePerfComponent />
         </div>
-        <br/>
+        <br />
         <div className="bg-white">
           <AreaChartComponent />
         </div>
