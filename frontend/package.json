@@ -12,6 +12,9 @@
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
     "@tabler/icons-react": "^3.19.0",
+    "@tsparticles/engine": "^3.5.0",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.5.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.9.0",
     "next": "14.2.13",
@@ -22,6 +25,7 @@
     "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

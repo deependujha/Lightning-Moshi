@@ -1,5 +1,19 @@
 import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addVariablesForColors({ addBase, theme }: any) {
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}
 
 const config: Config = {
   content: [
@@ -17,6 +31,6 @@ const config: Config = {
     },
   },
   // darkMode: "class",
-  plugins: [nextui()],
+  plugins: [nextui(), addVariablesForColors],
 };
 export default config;

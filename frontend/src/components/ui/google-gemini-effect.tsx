@@ -4,7 +4,6 @@ import { motion, MotionValue } from "framer-motion";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-
 const transition = {
   duration: 0,
   ease: "linear",
@@ -12,13 +11,9 @@ const transition = {
 
 export const GoogleGeminiEffect = ({
   pathLengths,
-  title,
-  description,
   className,
 }: {
   pathLengths: MotionValue[];
-  title?: string;
-  description?: string;
   className?: string;
 }) => {
   const router = useRouter();
@@ -26,14 +21,19 @@ export const GoogleGeminiEffect = ({
   return (
     <div className={cn("sticky top-80", className)}>
       <p className="text-lg sm:text-2xl md:text-7xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-400 to-pink-500">
-      Lightning Moshi ⚡
+        Lightning Moshi ⚡
       </p>
       <p className="text-xs sm:text-medium md:text-lg font-normal text-center text-neutral-400 mt-4 max-w-lg mx-auto">
         {/* Talk to SOTA speech-to-speech model Moshi, powered by forked LitServe with gRPC */}
-        Engage with the state-of-the-art speech-to-speech model, Moshi, powered by a custom LitServe fork integrated with gRPC for seamless, high-speed communication
+        Engage with the state-of-the-art speech-to-speech model, Moshi, powered
+        by a custom LitServe fork integrated with gRPC for seamless, high-speed
+        communication
       </p>
       <div className="w-full h-[890px] -top-60 md:-top-40  flex items-center justify-center bg-red-transparent absolute ">
-        <button className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto" onClick={()=>router.push("/app")}>
+        <button
+          className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto"
+          onClick={() => router.push("/app")}
+        >
           Talk to Moshi
         </button>
       </div>
@@ -162,4 +162,3 @@ export const GoogleGeminiEffect = ({
     </div>
   );
 };
-
