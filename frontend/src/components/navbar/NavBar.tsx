@@ -49,6 +49,7 @@ const NavBarComponent = () => {
 
   return (
     <Navbar
+      isBlurred={curr_url !== "/app"}
       isBordered={true}
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}

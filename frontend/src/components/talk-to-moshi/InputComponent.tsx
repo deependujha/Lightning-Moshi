@@ -13,7 +13,7 @@ const InputComponent = ({ addNewMsg }: Props) => {
   const [isRecording, setIsRecording] = useState(false);
 
   return (
-    <>
+    <div className="flex items-center bg-black">
       <Tooltip
         content={isRecording ? "Pause Recording" : "Start Recording"}
         className="text-black bg-violet-400"
@@ -37,11 +37,13 @@ const InputComponent = ({ addNewMsg }: Props) => {
         </div>
       </Tooltip>
       {isRecording ? (
+        <div className="text-white px-3 text-center">
         <RecordingText msg="recording..." />
+        </div>
       ) : (
-        <div className="text-white px-3 text-center py-4">say something</div>
+        <div className="text-white px-3 text-center">say...</div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -49,7 +51,7 @@ export default InputComponent;
 
 const RecordingText = ({ msg }: { msg: string }) => {
   return (
-    <div className="text-white px-3 text-center py-4">
+    <div className="text-white text-center">
       <Typewriter
         onInit={(typewriter) => {
           typewriter.typeString(msg).pauseFor(800).start();

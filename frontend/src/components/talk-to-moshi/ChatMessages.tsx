@@ -2,7 +2,8 @@
 import React from "react";
 import ChatBoxComponent from "@/components/talk-to-moshi/ChatBoxComponent";
 import { Pangolin } from "next/font/google";
-import { TypewriterComponent } from "./TypeWriterComponenet";
+import Typewriter from "typewriter-effect";
+import AudioPlayerComponent from "./AudioPlayerComponent";
 
 const pangolin = Pangolin({
   subsets: ["latin", "latin-ext"],
@@ -22,13 +23,7 @@ type Props = {
 
 const ChatMessages = ({ messages, myRef, loading }: Props) => {
   return (
-    <div className="" style={{ maxHeight: "90vh", overflowY: "scroll" }}>
-      <div
-        className={`py-8 text-xl underline text-center text-pink-800 ${pangolin.className}`}
-        style={{ fontSize: "40px" }}
-      >
-        Constitution GPT
-      </div>
+    <div className="mx-2" style={{ maxHeight: "90vh", overflowY: "scroll" }}>
       {messages.map((m, index) => {
         return (
           <div
@@ -37,7 +32,7 @@ const ChatMessages = ({ messages, myRef, loading }: Props) => {
               m.sender === "bot" ? "justify-start" : "justify-end"
             }`}
           >
-            <ChatBoxComponent message={m.message} sender={m.sender} />
+            <AudioPlayerComponent sender={m.sender} />
           </div>
         );
       })}
@@ -47,7 +42,7 @@ const ChatMessages = ({ messages, myRef, loading }: Props) => {
           style={{ height: "60px" }}
           ref={myRef}
         >
-          <TypewriterComponent />
+          <WaitingForAIResponse msg="Please wait, Moshi is generating response..." />
         </div>
       )}
     </div>
@@ -55,3 +50,20 @@ const ChatMessages = ({ messages, myRef, loading }: Props) => {
 };
 
 export default ChatMessages;
+
+const WaitingForAIResponse = ({ msg }: { msg: string }) => {
+  return (
+    <div className="text-white px-3 text-center pt-4 pb-[13vh]">
+      <Typewriter
+        onInit={(typewriter) => {
+          typewriter.typeString(msg).pauseFor(800).start();
+        }}
+        options={{
+          autoStart: true,
+          loop: true,
+          deleteSpeed: 50,
+        }}
+      />
+    </div>
+  );
+};
