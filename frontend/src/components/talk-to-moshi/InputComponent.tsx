@@ -12,14 +12,14 @@ type Props = {
 const InputComponent = ({ startRecording, stopRecording }: Props) => {
   const [isRecording, setIsRecording] = useState(false);
 
-  const handleRecording = async(status: boolean) => {
+  const handleRecording = async (status: boolean) => {
     setIsRecording(status);
     if (status) {
       await startRecording();
     } else {
       await stopRecording();
     }
-  }
+  };
 
   return (
     <div className="flex items-center bg-black">
@@ -28,7 +28,10 @@ const InputComponent = ({ startRecording, stopRecording }: Props) => {
         className="text-black bg-violet-400"
       >
         <div>
-          <button onClick={() => handleRecording(!isRecording)}>
+          <button
+            className="flex items-center"
+            onClick={() => handleRecording(!isRecording)}
+          >
             <div>
               <Image
                 src={
@@ -42,16 +45,16 @@ const InputComponent = ({ startRecording, stopRecording }: Props) => {
                 priority={true}
               />
             </div>
+            {isRecording ? (
+              <div className="text-white px-3 text-center">
+                <RecordingText msg="recording..." />
+              </div>
+            ) : (
+              <div className="text-white px-3 text-center">say...</div>
+            )}
           </button>
         </div>
       </Tooltip>
-      {isRecording ? (
-        <div className="text-white px-3 text-center">
-          <RecordingText msg="recording..." />
-        </div>
-      ) : (
-        <div className="text-white px-3 text-center">say...</div>
-      )}
     </div>
   );
 };

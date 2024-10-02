@@ -1,6 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import AudioMessages, { MsgType } from "@/components/talk-to-moshi/AudioMessages";
+import React, { useRef, useState } from "react";
+import AudioMessages, {
+  MsgType,
+} from "@/components/talk-to-moshi/AudioMessages";
 import InputComponent from "@/components/talk-to-moshi/InputComponent";
 import MainLandingComponent from "@/components/talk-to-moshi/MainLandingComponent";
 import { GridBackground } from "@/components/ui/GridBackground";
@@ -15,13 +17,14 @@ const AppPage = () => {
   const chunks = useRef<Blob[]>([]);
   // const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
   const [recordedUrlList, setRecordedUrlList] = useState<MsgType[]>([]);
+  const recordingStartTime = useRef<number>(0);
 
   const startRecording = async () => {
     try {
       console.log("start recording");
       // Ensure navigator.mediaDevices is available and typed
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
+
       mediaStream.current = stream;
       mediaRecorder.current = new MediaRecorder(stream);
 
@@ -32,23 +35,30 @@ const AppPage = () => {
       };
 
       mediaRecorder.current.onstop = () => {
-        const recordedBlob = new Blob(chunks.current, { type: 'audio/webm' });
+        const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
         const url = URL.createObjectURL(recordedBlob);
-        // setRecordedUrl(url);
-        setRecordedUrlList([...(recordedUrlList || []), { message: url, sender: "user" }]);
-        console.log('Recorded audio:', recordedBlob);
+        const endTime = new Date().valueOf();
+        const differenceInSeconds = Math.ceil(
+          (endTime - recordingStartTime.current) / 1000,
+        );
+        setRecordedUrlList([
+          ...(recordedUrlList || []),
+          { message: url, sender: "user", duration: differenceInSeconds },
+        ]);
+        console.log("Recorded audio:", recordedBlob);
         chunks.current = []; // Reset chunks after processing
       };
 
       mediaRecorder.current.start();
+      recordingStartTime.current = new Date().valueOf();
     } catch (error) {
-      console.error('Error accessing microphone:', error);
+      console.error("Error accessing microphone:", error);
     }
   };
 
   const stopRecording = () => {
     console.log("stop recording");
-    if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
+    if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
       mediaRecorder.current.stop();
     }
 
@@ -64,9 +74,15 @@ const AppPage = () => {
     }
   };
 
-  const addNewMsg = async (msg: string, sender: "user" | "bot") => {
-    if (msg.trim() === "") return;
-    setMessages((prev) => [...prev, { message: msg, sender: sender }]);
+  const addNewMsg = async (
+    msg: string,
+    sender: "user" | "bot",
+    duration: number,
+  ) => {
+    setMessages((prev) => [
+      ...prev,
+      { message: msg, sender: sender, duration: duration },
+    ]);
     setTimeout(() => {
       if (myRef.current !== null) {
         myRef.current.scrollIntoView({ behavior: "smooth" });
@@ -119,7 +135,10 @@ const AppPage = () => {
       </GridBackground>
 
       <div className="flex pl-[40vw] lg:pl-[45vw] items-center fixed bottom-0 h-[10vh] z-20 w-full bg-black">
-        <InputComponent startRecording={startRecording} stopRecording={stopRecording} />
+        <InputComponent
+          startRecording={startRecording}
+          stopRecording={stopRecording}
+        />
       </div>
     </div>
   );

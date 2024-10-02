@@ -1,24 +1,70 @@
 "use client";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Slider } from "@nextui-org/react";
 import Image from "next/image";
 
 type Props = {
   sender: "user" | "bot";
   audio: string;
+  duration: number;
 };
 
 const UserAudioBoxCSS =
   "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500";
 const BotAudioBoxCSS = "bg-gradient-to-r from-cyan-500 to-blue-500";
 
-const AudioPlayerComponent = ({ sender, audio }: Props) => {
+const AudioPlayerComponent = ({ sender, audio, duration }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null); // Reference to the audio element
+  const [currentTime, setCurrentTime] = useState(0); // Current time of the audio
+
+  // Play or pause the audio
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  // Update current time as the audio plays
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        setCurrentTime(0);
+        setIsPlaying(false);
+        return;
+      }
+
+      setCurrentTime(audioRef.current.currentTime);
+      if (audioRef.current.currentTime >= duration) {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      }
+    }
+  };
+
+  // Seek audio when progress bar is dragged
+  const handleSeek = (value: number | number[]) => {
+    if (typeof value !== "number") {
+      value = value[0];
+    }
+    const seekTime = value;
+    if (audioRef.current) {
+      audioRef.current.currentTime = seekTime;
+      setCurrentTime(seekTime);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center gap-2 py-3">
+      <audio ref={audioRef} src={audio} onTimeUpdate={handleTimeUpdate} />
+
       {sender === "bot" && (
         <Image
           src="/icons/assistant.png"
@@ -31,7 +77,7 @@ const AudioPlayerComponent = ({ sender, audio }: Props) => {
         className={`flex items-center gap-2  rounded-3xl px-4 py-1 ${sender === "user" ? UserAudioBoxCSS : BotAudioBoxCSS}`}
       >
         {isPlaying ? (
-          <button onClick={() => setIsPlaying(false)}>
+          <button onClick={togglePlayPause}>
             <FontAwesomeIcon
               icon={faPause}
               style={{ color: "#ffffff" }}
@@ -39,7 +85,7 @@ const AudioPlayerComponent = ({ sender, audio }: Props) => {
             />
           </button>
         ) : (
-          <button onClick={() => setIsPlaying(true)}>
+          <button onClick={togglePlayPause}>
             <FontAwesomeIcon
               icon={faPlay}
               style={{ color: "#ffffff" }}
@@ -47,9 +93,17 @@ const AudioPlayerComponent = ({ sender, audio }: Props) => {
             />
           </button>
         )}
-        <div className="text-white px-1 text-center py-4">0:00</div>
-        <SliderComponent />
-        <div className="text-white px-1 text-center py-4">0:20</div>
+        <div className="text-white px-1 text-center py-4">
+          {PrettyPrintTime(Math.ceil(currentTime))}
+        </div>
+        <SliderComponent
+          duration={duration}
+          value={currentTime}
+          onChange={handleSeek}
+        />
+        <div className="text-white px-1 text-center py-4">
+          {PrettyPrintTime(duration)}
+        </div>
       </div>
       {sender === "user" && (
         <Image src="/icons/user.png" width={40} height={40} alt="assistant" />
@@ -60,17 +114,39 @@ const AudioPlayerComponent = ({ sender, audio }: Props) => {
 
 export default AudioPlayerComponent;
 
-const SliderComponent = () => {
+type SliderComponentProps = {
+  value: number;
+  onChange: (v: number | number[]) => void;
+  duration: number;
+};
+
+const SliderComponent = ({
+  value,
+  onChange,
+  duration,
+}: SliderComponentProps) => {
   return (
     <Slider
       size="sm"
-      step={0.1}
+      step={1}
       color="foreground"
-      maxValue={10}
+      maxValue={duration}
       minValue={0}
       defaultValue={0}
       className="w-[40vw] md:w-[30vw]"
       aria-labelledby="slider-label"
+      value={value}
+      onChange={onChange}
     />
   );
+};
+
+const PrettyPrintTime = (t: number) => {
+  if (t >= 60) {
+    return "0:59";
+  }
+  if (t >= 10) {
+    return `0:${t}`;
+  }
+  return `0:0${t}`;
 };

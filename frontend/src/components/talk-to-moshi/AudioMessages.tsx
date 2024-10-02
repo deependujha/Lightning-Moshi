@@ -6,6 +6,7 @@ import AudioPlayerComponent from "./AudioPlayerComponent";
 export type MsgType = {
   message: string;
   sender: "user" | "bot";
+  duration: number;
 };
 
 type Props = {
@@ -25,22 +26,20 @@ const AudioMessages = ({ msg, myRef, loading }: Props) => {
               m.sender === "bot" ? "justify-start" : "justify-end"
             }`}
           >
-            <AudioPlayerComponent audio={m.message} sender={m.sender} />
+            <AudioPlayerComponent
+              audio={m.message}
+              sender={m.sender}
+              duration={m.duration}
+            />
           </div>
         );
       })}
       {loading && (
-        <div
-          className="text-pink-500 text-center py-4"
-        >
+        <div className="text-pink-500 text-center py-4">
           <WaitingForAIResponse msg="Please wait, Moshi is generating response..." />
         </div>
       )}
-      <div className=""
-          ref={myRef}
-          style={{ height: "20vh" }}
-        >
-        </div>
+      <div className="" ref={myRef} style={{ height: "20vh" }}></div>
     </div>
   );
 };
