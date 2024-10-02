@@ -1,44 +1,68 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import ChatMessages from "@/components/talk-to-moshi/ChatMessages";
+import AudioMessages, { MsgType } from "@/components/talk-to-moshi/AudioMessages";
 import InputComponent from "@/components/talk-to-moshi/InputComponent";
 import MainLandingComponent from "@/components/talk-to-moshi/MainLandingComponent";
 import { GridBackground } from "@/components/ui/GridBackground";
-import AudioPlayerComponent from "@/components/talk-to-moshi/AudioPlayerComponent";
-
-type MsgType = {
-  message: string;
-  sender: "user" | "bot";
-};
-
-const DummyData: MsgType[] = [
-  {
-    message: "Hello, how are you doing today?",
-    sender: "user",
-  },
-  {
-    message: "I'm doing great, thanks for asking!",
-    sender: "bot",
-  },
-  {
-    message: "I'm doing great, thanks for asking!",
-    sender: "bot",
-  },
-  {
-    message:
-      "I'm doing great, thanks for asking! I'm doing great, thanks for asking!",
-    sender: "bot",
-  },
-  {
-    message: "How are you doing today?",
-    sender: "user",
-  },
-];
 
 const AppPage = () => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([] as MsgType[]);
   const myRef = useRef<HTMLDivElement>(null);
+
+  const mediaStream = useRef<MediaStream | null>(null);
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const chunks = useRef<Blob[]>([]);
+  // const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
+  const [recordedUrlList, setRecordedUrlList] = useState<MsgType[]>([]);
+
+  const startRecording = async () => {
+    try {
+      console.log("start recording");
+      // Ensure navigator.mediaDevices is available and typed
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      mediaStream.current = stream;
+      mediaRecorder.current = new MediaRecorder(stream);
+
+      mediaRecorder.current.ondataavailable = (e: BlobEvent) => {
+        if (e.data.size > 0) {
+          chunks.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.current.onstop = () => {
+        const recordedBlob = new Blob(chunks.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(recordedBlob);
+        // setRecordedUrl(url);
+        setRecordedUrlList([...(recordedUrlList || []), { message: url, sender: "user" }]);
+        console.log('Recorded audio:', recordedBlob);
+        chunks.current = []; // Reset chunks after processing
+      };
+
+      mediaRecorder.current.start();
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
+
+  const stopRecording = () => {
+    console.log("stop recording");
+    if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
+      mediaRecorder.current.stop();
+    }
+
+    if (mediaStream.current) {
+      mediaStream.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      mediaStream.current = null; // Reset media stream
+    }
+    if (myRef.current !== null) {
+      console.log("scroll to bottom");
+      myRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const addNewMsg = async (msg: string, sender: "user" | "bot") => {
     if (msg.trim() === "") return;
@@ -73,29 +97,19 @@ const AppPage = () => {
     //     alert(err.message || "An error occurred while making API request");
     //   });
   };
-  useEffect(() => {
-    DummyData.forEach((msg) => {
-      addNewMsg(msg.message, msg.sender);
-    });
-  }, []);
 
   return (
     <div className="h-[90vh]">
       <GridBackground>
-        <div className="h-[80vh] grid-bg-radial">
-          {messages.length === 0 ? (
+        <div className="h-[85vh] grid-bg-radial">
+          {recordedUrlList.length === 0 ? (
             <div className="flex flex-col h-[90vh] justify-center items-center">
               <MainLandingComponent />
-              {/* {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} className="py-3">
-                  <AudioPlayerComponent sender={i % 2 === 0 ? "user" : "bot"} />
-                </div>
-              ))} */}
             </div>
           ) : (
             <div className="z-10">
-              <ChatMessages
-                messages={messages}
+              <AudioMessages
+                msg={recordedUrlList}
                 myRef={myRef}
                 loading={loading}
               />
@@ -105,7 +119,7 @@ const AppPage = () => {
       </GridBackground>
 
       <div className="flex pl-[40vw] lg:pl-[45vw] items-center fixed bottom-0 h-[10vh] z-20 w-full bg-black">
-        <InputComponent addNewMsg={addNewMsg} />
+        <InputComponent startRecording={startRecording} stopRecording={stopRecording} />
       </div>
     </div>
   );

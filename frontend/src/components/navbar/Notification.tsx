@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import Image from "next/image";
 
 const Notification = () => {
   const curr_url = usePathname();
-  const [notificationVisible, setNotificationVisible] = useState(curr_url !== "/app");
+  const [notificationVisible, setNotificationVisible] = useState(
+    curr_url !== "/app",
+  );
   const handleNotificationClose = () => {
     console.log(`notification closed`);
     setNotificationVisible(false);

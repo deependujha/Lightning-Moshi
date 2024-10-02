@@ -2,15 +2,24 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import Typewriter from "typewriter-effect";
-import { Tooltip, Button } from "@nextui-org/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Tooltip } from "@nextui-org/react";
 
 type Props = {
-  addNewMsg: (msg: string, sender: "user" | "bot") => void;
+  startRecording: () => void;
+  stopRecording: () => void;
 };
 
-const InputComponent = ({ addNewMsg }: Props) => {
+const InputComponent = ({ startRecording, stopRecording }: Props) => {
   const [isRecording, setIsRecording] = useState(false);
+
+  const handleRecording = async(status: boolean) => {
+    setIsRecording(status);
+    if (status) {
+      await startRecording();
+    } else {
+      await stopRecording();
+    }
+  }
 
   return (
     <div className="flex items-center bg-black">
@@ -19,7 +28,7 @@ const InputComponent = ({ addNewMsg }: Props) => {
         className="text-black bg-violet-400"
       >
         <div>
-          <button onClick={() => setIsRecording(!isRecording)}>
+          <button onClick={() => handleRecording(!isRecording)}>
             <div>
               <Image
                 src={
@@ -38,7 +47,7 @@ const InputComponent = ({ addNewMsg }: Props) => {
       </Tooltip>
       {isRecording ? (
         <div className="text-white px-3 text-center">
-        <RecordingText msg="recording..." />
+          <RecordingText msg="recording..." />
         </div>
       ) : (
         <div className="text-white px-3 text-center">say...</div>
