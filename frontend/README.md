@@ -1,3 +1,3 @@
 # Lightning Moshi
 
-- Frontend for `Lightning Moshi`
+frontend for `Lightning Moshi`
