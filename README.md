@@ -35,6 +35,22 @@
 
 ---
 
+## Using LitServe with gRPC
+
+1. Generate the proto file
+
+```bash
+litserve generate_protobuf
+```
+
+2. Modify the proto file according to your needs
+3. Generate the python grpc server code (`litserve command helps`)
+4. Just import in your litserve server and pass to the `LitServer` class
+
+![diagram](./assets/litserve_grpc.gif)
+
+---
+
 ## BenchMarks
 
 - [Checkout the benchmark code & results](./benchmark-litserve-grpc/) (go client & python server)
