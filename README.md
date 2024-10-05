@@ -15,6 +15,8 @@
     - **backend**: AWS ECS (to autoscale)
     - **grpc litserve model**: AWS EC2
 
+- [Checkout the LitServe fork with grpc support](./LitServe_with_grpc/)
+
 ---
 
 ## Tech Stack
