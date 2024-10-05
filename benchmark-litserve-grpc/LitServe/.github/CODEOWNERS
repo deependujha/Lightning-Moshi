@@ -1,0 +1,15 @@
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in the repo. Unless a later match takes precedence,
+# @global-owner1 and @global-owner2 will be requested for review when someone opens a pull request.
+* @lantiga @aniketmaurya @awaelchli @Andrei-Aksionov
+
+# CI/CD and configs
+/.github/       @borda
+*.yaml          @borda
+*.yml           @borda
+
+# devel requirements
+/_requirements/ @borda @lantiga
+
+/README.md                           @williamfalcon @lantiga

@@ -36,6 +36,7 @@ const AppPage = () => {
 
       mediaRecorder.current.onstop = () => {
         const recordedBlob = new Blob(chunks.current, { type: "audio/webm" });
+        sendAudioBlob(recordedBlob);
         const url = URL.createObjectURL(recordedBlob);
         const endTime = new Date().valueOf();
         const differenceInSeconds = Math.ceil(
@@ -112,6 +113,26 @@ const AppPage = () => {
     //     setLoading(false);
     //     alert(err.message || "An error occurred while making API request");
     //   });
+  };
+
+  const sendAudioBlob = async (audioBlob: Blob) => {
+    const formData = new FormData();
+    formData.append("audio", audioBlob, "recording.wav"); // Append the blob to FormData, with a filename
+
+    try {
+      const response = await fetch("http://localhost:8080/getResponse", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Audio blob uploaded successfully");
+      } else {
+        console.error("Error uploading the audio blob");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (

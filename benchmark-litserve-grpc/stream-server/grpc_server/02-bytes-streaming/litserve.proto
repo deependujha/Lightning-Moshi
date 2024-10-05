@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package litserver_grpc;
+
+// LitServe service definitions
+service LitServe {
+    // for server-side streaming, change this to `rpc Predict (Request) returns (stream Response) {}`
+    rpc Predict (Request) returns (stream Response) {}
+}
+
+// The request message containing expected input type
+message Request {
+}
+
+// The response message containing the output type
+message Response {
+    bytes message = 1;
+}
